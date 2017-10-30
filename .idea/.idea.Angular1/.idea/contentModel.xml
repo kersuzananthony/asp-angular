@@ -54,7 +54,29 @@
         </e>
         <e p="Controllers" t="Include">
           <e p="HomeController.cs" t="Include" />
+          <e p="MakesController.cs" t="Include" />
+          <e p="Resources" t="Include">
+            <e p="MakeResource.cs" t="Include" />
+            <e p="ModelResource.cs" t="Include" />
+          </e>
           <e p="SampleDataController.cs" t="Include" />
+        </e>
+        <e p="Database" t="Include">
+          <e p="VegaDbContext.cs" t="Include" />
+        </e>
+        <e p="Mapping" t="Include">
+          <e p="MappingProfile.cs" t="Include" />
+        </e>
+        <e p="Migrations" t="Include">
+          <e p="20171030191058_ApplyConstraint.cs" t="Include" />
+          <e p="20171030191058_ApplyConstraint.Designer.cs" t="Include" />
+          <e p="20171030191259_SeedDatabase.cs" t="Include" />
+          <e p="20171030191259_SeedDatabase.Designer.cs" t="Include" />
+          <e p="VegaDbContextModelSnapshot.cs" t="Include" />
+        </e>
+        <e p="Models" t="Include">
+          <e p="Make.cs" t="Include" />
+          <e p="Model.cs" t="Include" />
         </e>
         <e p="npm-shrinkwrap.json" t="Include" />
         <e p="obj" t="ExcludeRecursive">
