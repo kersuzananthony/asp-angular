@@ -38,6 +38,19 @@
                 <e p="navmenu.component.html" t="Include" />
                 <e p="navmenu.component.ts" t="Include" />
               </e>
+              <e p="vehicle-form" t="Include">
+                <e p="vehicle-form.component.html" t="Include" />
+                <e p="vehicle-form.component.ts" t="Include" />
+              </e>
+            </e>
+            <e p="Models" t="Include">
+              <e p="feature.model.ts" t="Include" />
+              <e p="make.model.ts" t="Include" />
+              <e p="model.model.ts" t="Include" />
+            </e>
+            <e p="services" t="Include">
+              <e p="features.service.ts" t="Include" />
+              <e p="makes.service.ts" t="Include" />
             </e>
           </e>
           <e p="boot.browser.ts" t="Include" />
@@ -56,6 +69,8 @@
           <e p="HomeController.cs" t="Include" />
           <e p="MakesController.cs" t="Include" />
           <e p="Resources" t="Include">
+            <e p="FeatureResource.cs" t="Include" />
+            <e p="FeaturesController.cs" t="Include" />
             <e p="MakeResource.cs" t="Include" />
             <e p="ModelResource.cs" t="Include" />
           </e>
@@ -72,9 +87,14 @@
           <e p="20171030191058_ApplyConstraint.Designer.cs" t="Include" />
           <e p="20171030191259_SeedDatabase.cs" t="Include" />
           <e p="20171030191259_SeedDatabase.Designer.cs" t="Include" />
+          <e p="20171101102650_AddFeatures.cs" t="Include" />
+          <e p="20171101102650_AddFeatures.Designer.cs" t="Include" />
+          <e p="20171101102957_SeedFeatures.cs" t="Include" />
+          <e p="20171101102957_SeedFeatures.Designer.cs" t="Include" />
           <e p="VegaDbContextModelSnapshot.cs" t="Include" />
         </e>
         <e p="Models" t="Include">
+          <e p="Feature.cs" t="Include" />
           <e p="Make.cs" t="Include" />
           <e p="Model.cs" t="Include" />
         </e>

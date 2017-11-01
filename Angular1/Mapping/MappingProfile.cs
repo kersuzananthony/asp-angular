@@ -10,6 +10,7 @@ namespace Angular1.Mapping
         {
             CreateMap<Make, MakeResource>();
             CreateMap<Model, ModelResource>();
+            CreateMap<Feature, FeatureResource>();
         }
     }
 }
