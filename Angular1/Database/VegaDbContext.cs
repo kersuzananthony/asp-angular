@@ -1,4 +1,4 @@
-﻿using Angular1.Models;
+﻿using Angular1.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Angular1.Database

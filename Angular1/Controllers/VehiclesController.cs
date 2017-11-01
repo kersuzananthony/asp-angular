@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Angular1.Controllers.Resources;
-using Angular1.Database;
-using Angular1.Models;
+using Angular1.Core;
+using Angular1.Core.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Angular1.Controllers
 {

@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Angular1.Models;
+using Angular1.Core;
+using Angular1.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Angular1.Database
+namespace Angular1.Database.Repositories
 {
     public class VehicleRepository : IVehicleRepository
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Angular1.Models
+namespace Angular1.Core.Models
 {
     public class Feature
     {

@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Angular1.Controllers.Resources;
-using Angular1.Models;
+using Angular1.Core.Models;
 using AutoMapper;
 
 namespace Angular1.Mapping

@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Angular1.Models;
+using Angular1.Core;
+using Angular1.Core.Models;
 
-namespace Angular1.Database
+namespace Angular1.Database.Repositories
 {
     public class ModelRepository : IModelRepository
     {

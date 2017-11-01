@@ -1,31 +1,30 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Angular1.Controllers.Resources;
-using Angular1.Database;
-using Angular1.Models;
+using Angular1.Core;
+using Angular1.Core.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Angular1.Controllers
 {
     [Route("/api/[controller]")]
     public class FeaturesController : Controller
     {
-        private VegaDbContext _context;
-
-        private IMapper _mapper;
+        private readonly IFeatureRepository _featureRepository;
         
-        public FeaturesController(VegaDbContext context, IMapper mapper)
+        private readonly IMapper _mapper;
+        
+        public FeaturesController(IFeatureRepository featureRepository, IMapper mapper)
         {
-            _context = context;
+            _featureRepository = featureRepository;
             _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IEnumerable<KeyValuePairResource>> GetFeatures()
         {
-            var features = await _context.Features.ToListAsync();
+            var features = await _featureRepository.GetFeaturesAsync();
 
             return _mapper.Map<List<Feature>, List<KeyValuePairResource>>(features);
         }
