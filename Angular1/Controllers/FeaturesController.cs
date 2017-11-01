@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Angular1.Controllers.Resources;
 using Angular1.Database;
 using Angular1.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Angular1.Controllers.Resources
+namespace Angular1.Controllers
 {
     [Route("/api/[controller]")]
     public class FeaturesController : Controller
@@ -22,11 +23,11 @@ namespace Angular1.Controllers.Resources
         }
 
         [HttpGet]
-        public async Task<IEnumerable<FeatureResource>> GetFeatures()
+        public async Task<IEnumerable<KeyValuePairResource>> GetFeatures()
         {
             var features = await _context.Features.ToListAsync();
 
-            return _mapper.Map<List<Feature>, List<FeatureResource>>(features);
+            return _mapper.Map<List<Feature>, List<KeyValuePairResource>>(features);
         }
     }
 }

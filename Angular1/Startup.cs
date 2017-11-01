@@ -41,6 +41,7 @@ namespace Angular1
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DATABASE_URL"));
             });
+            services.AddScoped<IVehicleRepository, VehicleRepository>();
 
             services.AddAutoMapper();
         }
