@@ -5,6 +5,10 @@ namespace Angular1.Database
 {
     public interface IVehicleRepository
     {
-        Task<Vehicle> GetVehicleAsync(int id);
+        Task<Vehicle> GetVehicleAsync(int id, bool includeRelated = true);
+
+        void Add(Vehicle vehicle);
+
+        void Remove(Vehicle vehicle);
     }
 }

@@ -14,21 +14,24 @@ namespace Angular1.Controllers
     {
         private readonly IMapper _mapper;
         
-        private readonly VegaDbContext _context;
+        private readonly IVehicleRepository _vehicleRepository;
         
-        private readonly IVehicleRepository _repository;
+        private readonly IModelRepository _modelRepository;
 
-        public VehiclesController(IMapper mapper, VegaDbContext context, IVehicleRepository repository)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public VehiclesController(IMapper mapper, IVehicleRepository vehicleRepository, IModelRepository modelRepository, IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
-            _context = context;
-            _repository = repository;
+            _vehicleRepository = vehicleRepository;
+            _modelRepository = modelRepository;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetVehicle(int id)
         {
-            var vehicle = await _repository.GetVehicleAsync(id);
+            var vehicle = await _vehicleRepository.GetVehicleAsync(id);
             
             if (vehicle == null)
                 return NotFound();
@@ -39,25 +42,16 @@ namespace Angular1.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateVehicle([FromBody] SaveVehicleResource saveVehicleResource)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var model = await _context.Models.FindAsync(saveVehicleResource.ModelId);
-            if (model == null)
-            {
-                ModelState.AddModelError("modelId", "Invalid model id");
-                return BadRequest(ModelState);
-            }
+            var validation = await ValidateResource(saveVehicleResource);
+            if (validation != null) return validation;
             
             var vehicle = _mapper.Map<SaveVehicleResource, Vehicle>(saveVehicleResource);
             vehicle.LastUpdate = DateTime.Now;
 
-            _context.Vehicles.Add(vehicle);
-            await _context.SaveChangesAsync();
+            _vehicleRepository.Add(vehicle);
+            await _unitOfWork.CompleteAsync();
 
-            vehicle = await _repository.GetVehicleAsync(vehicle.Id);
+            vehicle = await _vehicleRepository.GetVehicleAsync(vehicle.Id);
 
             return Created($"api/vehicles/{vehicle.Id}", _mapper.Map<Vehicle, VehicleResource>(vehicle));
         }
@@ -65,32 +59,48 @@ namespace Angular1.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateVehicle(int id, [FromBody] SaveVehicleResource saveVehicleResource)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var validation = await ValidateResource(saveVehicleResource);
+            if (validation != null) return validation;
 
-            var vehicle = await _repository.GetVehicleAsync(id);
+            var vehicle = await _vehicleRepository.GetVehicleAsync(id);
             if (vehicle == null)
                 return NotFound();
             
             _mapper.Map(saveVehicleResource, vehicle);
             vehicle.LastUpdate = DateTime.Now;
 
-            await _context.SaveChangesAsync();
+            await _unitOfWork.CompleteAsync();
 
+            vehicle = await _vehicleRepository.GetVehicleAsync(vehicle.Id);
+            
             return Ok(_mapper.Map<Vehicle, VehicleResource>(vehicle));
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVehicle(int id)
         {
-            var vehicle = await _context.Vehicles.FindAsync(id);
+            var vehicle = await _vehicleRepository.GetVehicleAsync(id, includeRelated: false);
             if (vehicle == null)
                 return NotFound();
 
-            _context.Vehicles.Remove(vehicle);
-            await _context.SaveChangesAsync();
+            _vehicleRepository.Remove(vehicle);
+            await _unitOfWork.CompleteAsync();
 
             return Ok(id);
+        }
+
+        private async Task<IActionResult> ValidateResource(SaveVehicleResource resource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var model = await _modelRepository.GetModelAsync(resource.ModelId);
+            if (model != null) return null;
+            
+            ModelState.AddModelError("modelId", "Invalid model id");
+            return BadRequest(ModelState);
         }
     }
 }
