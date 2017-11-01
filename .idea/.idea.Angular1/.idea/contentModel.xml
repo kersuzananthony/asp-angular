@@ -49,8 +49,7 @@
               <e p="model.model.ts" t="Include" />
             </e>
             <e p="services" t="Include">
-              <e p="features.service.ts" t="Include" />
-              <e p="makes.service.ts" t="Include" />
+              <e p="vehicles.service.ts" t="Include" />
             </e>
           </e>
           <e p="boot.browser.ts" t="Include" />

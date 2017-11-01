@@ -10,8 +10,7 @@ import {HomeComponent} from './components/home/home.component';
 import {FetchDataComponent} from './components/fetchdata/fetchdata.component';
 import {CounterComponent} from './components/counter/counter.component';
 import {VehicleFormComponent} from "./components/vehicle-form/vehicle-form.component";
-import {MakesService} from "./services/makes.service";
-import {FeaturesService} from "./services/features.service";
+import {VehiclesService} from "./services/vehicles.service";
 
 @NgModule({
   declarations: [
@@ -36,8 +35,7 @@ import {FeaturesService} from "./services/features.service";
     ])
   ],
   providers: [
-    MakesService,
-    FeaturesService
+    VehiclesService
   ]
 })
 export class AppModuleShared {
