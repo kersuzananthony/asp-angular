@@ -30,6 +30,7 @@ export class VehiclesService {
   }
   
   public createVehicle(vehicleForm: VehicleForm): Observable<Vehicle | null> {
+    delete vehicleForm.id;
     return this._http.post("api/vehicles", vehicleForm).map(res => res.json());
   }
   
@@ -38,5 +39,9 @@ export class VehiclesService {
     
     return this._http.put(`api/vehicles/${vehicleForm.id}`, vehicleForm)
       .map(res => res.json());
+  }
+  
+  public deleteVehicle(id: number): Observable<any> {
+    return this._http.delete(`api/vehicles/${id}`);
   }
 }

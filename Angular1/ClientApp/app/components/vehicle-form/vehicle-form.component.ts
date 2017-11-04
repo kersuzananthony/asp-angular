@@ -87,7 +87,7 @@ export class VehicleFormComponent implements OnInit {
   }
   
   public submitForm() {
-    if (this.vehicle.id !== undefined) {
+    if (this.vehicle.id !== undefined && !isNaN(this.vehicle.id)) {
       this._vehicleService.updateVehicle(this.vehicle)
         .subscribe(() => {
           this._toastyService.success({
@@ -115,6 +115,25 @@ export class VehicleFormComponent implements OnInit {
       this.vehicle.features.push(+featureId);
     } else {
       this.vehicle.features.splice(this.vehicle.features.indexOf(+featureId), 1);
+    }
+  }
+  
+  public onDelete() {
+    if (!this.vehicle.id) return;
+    
+    if (confirm("Are you sure?")) {
+      this._vehicleService.deleteVehicle(this.vehicle.id)
+        .subscribe(() => {
+          this._toastyService.success({
+            title: "Success",
+            msg: "You have successfully deleted the vehicle",
+            timeout: 5000,
+            showClose: true,
+            theme: "bootstrap"
+          });
+          
+          this._router.navigate(["/home"]);
+        });
     }
   }
   

@@ -55,5 +55,6 @@
     </div>
     <div class="form-group">
         <button class="btn btn-primary" [disabled]="!form.valid">Submit</button>
+        <button *ngIf="vehicle.id > 0" class="btn btn-danger" type="button" (click)="onDelete()">Delete</button>
     </div>
 </form>
