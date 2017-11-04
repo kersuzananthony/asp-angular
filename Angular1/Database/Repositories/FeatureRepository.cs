@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Data.Entity;
 using System.Threading.Tasks;
 using Angular1.Core;
 using Angular1.Core.Models;
+using Microsoft.CodeAnalysis.Semantics;
+using Microsoft.EntityFrameworkCore;
 
 namespace Angular1.Database.Repositories
 {

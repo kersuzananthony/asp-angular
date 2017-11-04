@@ -4,6 +4,7 @@ import {Make} from "../models/make.model";
 import {Http} from "@angular/http";
 import {Feature} from "../models/feature.model";
 import "rxjs/add/operator/map";
+import {VehicleForm} from "../components/vehicle-form/vehicle-form.component";
 
 @Injectable()
 export class VehiclesService {
@@ -19,4 +20,8 @@ export class VehiclesService {
     return this._http.get("api/features")
       .map(result => result.json());
   }
+  
+  public createVehicle(vehicleForm: VehicleForm): Observable<any> {
+    return this._http.post("api/vehicles", vehicleForm).map(res => res.json());
+  } 
 }

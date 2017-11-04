@@ -1,47 +1,59 @@
 <h1>New Vehicle</h1>
 
-<form action="">
+<form action="" (ngSubmit)="submitForm()" #form="ngForm" novalidate>
     <div class="form-group">
         <label for="make">Make</label>
-        <select name="make" id="make" class="form-control" (change)="onMakeChange()" [(ngModel)]="vehicle.make">
+        <select name="makeId" id="make" class="form-control" (change)="onMakeChange()" [(ngModel)]="vehicle.makeId" required #make="ngModel">
             <option value=""></option>
             <option *ngFor="let make of makes" [attr.value]="make.id">{{ make.name }}</option>
         </select>
+        <div class="alert alert-danger" *ngIf="make.touched && !make.valid">
+            Please specify the make
+        </div>
     </div>
     <div class="form-group" *ngIf="!!models && models.length > 0">
         <label for="model">Model</label>
-        <select name="model" id="model" class="form-control" [(ngModel)]="vehicle.model">
+        <select name="modelId" id="model" class="form-control" [(ngModel)]="vehicle.modelId" required #model="ngModel">
             <option value=""></option>
             <option *ngFor="let model of models" [attr.value]="model.id">{{ model.name }}</option>
         </select>
+        <div class="alert alert-danger" *ngIf="model.touched && !model.valid">
+            Please specify the model
+        </div>
     </div>
     <p>Is the vehicle registered?</p>
     <label for="registered-yes" class="radio-inline">
-        <input type="radio" id="registered-yes"name="is-registered"> Yes
+        <input type="radio" id="registered-yes" name="is-registered" [(ngModel)]="vehicle.isRegistered" value="true"> Yes
     </label>
     <label for="registered-no" class="radio-inline">
-        <input type="radio" id="registered-no" name="is-registered"> No
+        <input type="radio" id="registered-no" name="isRegistered" [(ngModel)]="vehicle.isRegistered" value="false"> No
     </label>
     <h2>Features</h2>
     <div class="checkbox" *ngFor="let feature of features">
         <label [attr.for]="feature.id">
-            <input type="checkbox" [attr.id]="feature.id"> {{ feature.name }}
+            <input type="checkbox" [attr.id]="feature.id" (change)="onFeatureChange(feature.id, $event)"> {{ feature.name }}
         </label>
     </div>
     <h2>Contact</h2>
     <div class="form-group">
         <label for="contact-name">Name</label>
-        <input type="text" class="form-control" id="contact-name">
+        <input type="text" class="form-control" id="contact-name" [(ngModel)]="vehicle.contact.name" name="contactName" required #contactName="ngModel">
+        <div class="alert alert-danger" *ngIf="contactName.touched && !contactName.valid">
+            Please specify the name of the contact
+        </div>
     </div>
     <div class="form-group">
         <label for="contact-phone">Phone</label>
-        <input type="text" class="form-control" id="contact-phone">
+        <input type="text" class="form-control" id="contact-phone" [(ngModel)]="vehicle.contact.phone" name="contactPhone" required #contactPhone="ngModel">
+        <div class="alert alert-danger" *ngIf="contactPhone.touched && !contactPhone.valid">
+            Please specify the phone of the contact
+        </div>
     </div>
     <div class="form-group">
         <label for="contact-email">Email</label>
-        <input type="email" class="form-control" id="contact-email">
+        <input type="email" class="form-control" id="contact-email" [(ngModel)]="vehicle.contact.email" name="contactEmail">
     </div>
     <div class="form-group">
-        <button class="btn btn-primary">Submit</button>
+        <button class="btn btn-primary" [disabled]="!form.valid">Submit</button>
     </div>
 </form>
