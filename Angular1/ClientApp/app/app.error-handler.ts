@@ -9,14 +9,16 @@ export class AppErrorHandler extends ErrorHandler {
   }
   
   public handleError(error: any): void {
-    this._ngZone.run(() => {
-      this._toastyService.error({
-        title: "Error",
-        msg: "An unexpected error happened",
-        theme: "bootstrap",
-        showClose: true,
-        timeout: 5000
+    if (typeof (window) !== 'undefined') {
+      this._ngZone.run(() => {
+        this._toastyService.error({
+          title: "Error",
+          msg: "An unexpected error happened",
+          theme: "bootstrap",
+          showClose: true,
+          timeout: 5000
+        });
       });
-    });
+    }
   }
 }

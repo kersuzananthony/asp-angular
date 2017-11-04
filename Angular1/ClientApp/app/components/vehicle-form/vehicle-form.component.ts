@@ -3,13 +3,23 @@ import {Make} from "../../models/make.model";
 import {Model} from "../../models/model.model";
 import {Feature} from "../../models/feature.model";
 import {VehiclesService} from "../../services/vehicles.service";
+import {ActivatedRoute, Router} from "@angular/router";
+import "rxjs/add/operator/map";
+import "rxjs/add/operator/mergeMap";
+import "rxjs/add/observable/of";
+import "rxjs/add/observable/forkJoin";
+import {Observable} from "rxjs/Observable";
+import {Vehicle} from "../../models/vehicle";
+import Result = jasmine.Result;
+import {ToastyService} from "ng2-toasty";
 
 export interface VehicleForm {
-  makeId?: string;
-  modelId?: string;
+  id: number;
+  makeId?: number;
+  modelId?: number;
   isRegistered?: boolean;
-  features: string[];
-  contact: {name?: string,  phone?: string,  email?: string};
+  features: number[];
+  contact: {name: string,  phone: string,  email?: string};
 }
 
 @Component({
@@ -23,17 +33,45 @@ export class VehicleFormComponent implements OnInit {
   private _features: Feature[];
 
   public vehicle: VehicleForm = {
+    id: 0, 
     features: [],
-    contact: {}
+    contact: { name: "", phone: ""}
   };
 
-  constructor(private _vehicleService: VehiclesService) {
+  constructor(private _vehicleService: VehiclesService,
+              private _toastyService: ToastyService,
+              private _activatedRoute: ActivatedRoute, 
+              private _router: Router) {
 
   }
 
   ngOnInit() {
-    this._vehicleService.getMakes().subscribe(makes => this._makes = makes);
-    this._vehicleService.getFeatures().subscribe(features => this._features = features);
+    let sources: Observable<any>[] = [
+      this._vehicleService.getMakes(),
+      this._vehicleService.getFeatures()
+    ];
+    
+    this._activatedRoute.params
+      .map(p => this.vehicle.id = +p["id"])
+      .mergeMap(() => {
+        if (!!this.vehicle.id)
+          sources.push(this._vehicleService.getVehicle(this.vehicle.id));
+      
+        return Observable.forkJoin(sources);
+      })
+      .subscribe(
+        (data: any) => {
+          this._makes = <Make[]>data[0];
+          this._features = <Feature[]>data[1];
+          
+          if (!!this.vehicle.id)
+            this.setVehicle(data[2]);
+            this.populateModels();
+        },
+        (err: any) => {
+          if (err.status === 404) this._router.navigate(["/home"]);
+        }
+      );
   }
 
   get makes(): Make[] {
@@ -49,22 +87,48 @@ export class VehicleFormComponent implements OnInit {
   }
   
   public submitForm() {
-    this._vehicleService.createVehicle(this.vehicle).subscribe(
-      result => console.log(result)
-    );
+    if (this.vehicle.id !== undefined) {
+      this._vehicleService.updateVehicle(this.vehicle)
+        .subscribe(() => {
+          this._toastyService.success({
+            title: "Success",
+            msg: "The vehicle has been successfully updated",
+            showClose: true,
+            timeout: 5000,
+            theme: "bootstrap"
+          });
+        });
+    } else {
+      this._vehicleService.createVehicle(this.vehicle).subscribe(
+        result => console.log(result)
+      );
+    }
   }
 
   public onMakeChange() {
-    const selectedMake = this._makes.find(m => m.id === parseInt(this.vehicle.makeId!, 10));
-    this._models = !!selectedMake ? selectedMake.models : [];
+    this.populateModels();
     delete this.vehicle.modelId;
   }
   
   public onFeatureChange(featureId: string, event: any) {
     if (event.target.checked) {
-      this.vehicle.features.push(featureId);
+      this.vehicle.features.push(+featureId);
     } else {
-      this.vehicle.features.splice(this.vehicle.features.indexOf(featureId), 1);
+      this.vehicle.features.splice(this.vehicle.features.indexOf(+featureId), 1);
     }
+  }
+  
+  private populateModels() {
+    if (this.vehicle.makeId === undefined) return;
+    const selectedMake = this._makes.find(m => m.id === +this.vehicle.makeId!);
+    this._models = !!selectedMake ? selectedMake.models : [];
+  }
+  
+  private setVehicle(vehicle: Vehicle) {
+    this.vehicle.modelId = vehicle.model.id;
+    this.vehicle.makeId = vehicle.make.id;
+    this.vehicle.features = !!vehicle.features ? vehicle.features.map(f => f.id) : [];
+    this.vehicle.isRegistered = vehicle.isRegistered;
+    this.vehicle.contact = vehicle.contact;
   }
 }
