@@ -1,10 +1,22 @@
 <h1>List of Vehicles</h1>
 
-<div class="actions">
+<p>
     <button class="btn btn-primary" [routerLink]="['/vehicles/new']">
         Add New Vehicle
     </button>
+</p>
+
+<div class="well">
+    <div class="form-group">
+        <label for="make">Make</label>
+        <select name="make" id="make" class="form-control" [(ngModel)]="vehicleFilter.makeId" (change)="onFilterChange()">
+            <option value=""></option>
+            <option *ngFor="let make of makes" [attr.value]="make.id">{{ make.name }}</option>
+        </select>
+    </div>
+    <button class="btn btn-default" (click)="onReset()">Reset</button>
 </div>
+
 
 <table class="table" *ngIf="!!vehicles && vehicles.length > 0; else noVehicles">
     <thead>
