@@ -23,6 +23,10 @@ export class VehiclesService {
       .map(result => result.json());
   }
   
+  public getVehicles(): Observable<Vehicle[]> {
+    return this._http.get("api/vehicles").map(res => res.json());
+  }
+  
   public getVehicle(id: number): Observable<Vehicle | null> {
     if (id === null || isNaN(id)) return Observable.of(null);
     return this._http.get(`api/vehicles/${id}`)

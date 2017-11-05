@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Angular1.Controllers.Resources;
 using Angular1.Core;
@@ -25,6 +26,14 @@ namespace Angular1.Controllers
             _vehicleRepository = vehicleRepository;
             _modelRepository = modelRepository;
             _unitOfWork = unitOfWork;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetVehicles()
+        {
+            var vehicles = await _vehicleRepository.GetVehiclesAsync();
+
+            return Ok(_mapper.Map<List<Vehicle>, List<VehicleResource>>(vehicles));
         }
 
         [HttpGet("{id}")]

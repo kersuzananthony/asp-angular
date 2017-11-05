@@ -13,6 +13,7 @@ import {CounterComponent} from './components/counter/counter.component';
 import {VehicleFormComponent} from "./components/vehicle-form/vehicle-form.component";
 import {VehiclesService} from "./services/vehicles.service";
 import {AppErrorHandler} from "./app.error-handler";
+import {VehicleListComponent} from "./components/vehicle-list/vehicle-list.component";
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import {AppErrorHandler} from "./app.error-handler";
     CounterComponent,
     FetchDataComponent,
     HomeComponent,
-    VehicleFormComponent    
+    VehicleFormComponent,
+    VehicleListComponent
   ],
   imports: [
     CommonModule,
@@ -29,10 +31,11 @@ import {AppErrorHandler} from "./app.error-handler";
     FormsModule,
     ToastyModule.forRoot(),
     RouterModule.forRoot([
-      {path: '', redirectTo: 'home', pathMatch: 'full'},
+      {path: '', redirectTo: 'vehicles', pathMatch: 'full'},
       {path: 'home', component: HomeComponent},
       {path: 'counter', component: CounterComponent},
       {path: 'fetch-data', component: FetchDataComponent},
+      {path: 'vehicles', component: VehicleListComponent},
       {path: "vehicles/new", component: VehicleFormComponent},
       {path: "vehicles/:id", component: VehicleFormComponent},
       {path: '**', redirectTo: 'home'}

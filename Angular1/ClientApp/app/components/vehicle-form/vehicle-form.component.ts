@@ -4,14 +4,13 @@ import {Model} from "../../models/model.model";
 import {Feature} from "../../models/feature.model";
 import {VehiclesService} from "../../services/vehicles.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {Observable} from "rxjs/Observable";
+import {Vehicle} from "../../models/vehicle";
+import {ToastyService} from "ng2-toasty";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/mergeMap";
 import "rxjs/add/observable/of";
 import "rxjs/add/observable/forkJoin";
-import {Observable} from "rxjs/Observable";
-import {Vehicle} from "../../models/vehicle";
-import Result = jasmine.Result;
-import {ToastyService} from "ng2-toasty";
 
 export interface VehicleForm {
   id: number;

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Angular1.Core;
 using Angular1.Core.Models;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,16 @@ namespace Angular1.Database.Repositories
         public VehicleRepository(VegaDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<List<Vehicle>> GetVehiclesAsync()
+        {
+            return await _context.Vehicles
+                .Include(v => v.Features)
+                .ThenInclude(vf => vf.Feature)
+                .Include(v => v.Model)
+                .ThenInclude(m => m.Make)
+                .ToListAsync();
         }
 
         public async Task<Vehicle> GetVehicleAsync(int id, bool includeRelated = true)

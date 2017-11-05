@@ -1,0 +1,32 @@
+<h1>List of Vehicles</h1>
+
+<div class="actions">
+    <button class="btn btn-primary" [routerLink]="['/vehicles/new']">
+        Add New Vehicle
+    </button>
+</div>
+
+<table class="table" *ngIf="!!vehicles && vehicles.length > 0; else noVehicles">
+    <thead>
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Make</th>
+        <th scope="col">Model</th>
+        <th scope="col">Contact Name</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let vehicle of vehicles">
+        <th scope="row">{{ vehicle.id }}</th>
+        <td>{{ vehicle.make.name }}</td>
+        <td>{{ vehicle.model.name }}</td>
+        <td>{{ vehicle.contact.name }}</td>
+        <td><a [routerLink]="['/vehicles', vehicle.id]" class="btn btn-outline">View</a></td>
+    </tr>
+    </tbody>
+</table>
+
+<ng-template #noVehicles style="margin-top: 50px;">
+    No Vehicles added yet
+</ng-template>
