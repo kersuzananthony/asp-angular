@@ -17,7 +17,6 @@ export interface VehicleFilter {
 export class VehicleListComponent implements OnInit {
   
   private _vehicles: Vehicle[] = [];
-  private _allVehicles: Vehicle[] = [];
   private _makes: Make[] = [];
   
   public vehicleFilter: VehicleFilter = {};
@@ -35,27 +34,22 @@ export class VehicleListComponent implements OnInit {
   ngOnInit() {
     const sources: Observable<any>[] = [
       this._vehiclesService.getMakes(),
-      this._vehiclesService.getVehicles()
+      this._vehiclesService.getVehicles(this._vehiclesService)
     ];
     
     Observable.forkJoin(sources)
       .subscribe(data => {
         this._makes = data[0] as Make[] || [];
         this._vehicles = data[1] as Vehicle[] || [];
-        this._allVehicles = data[1] as Vehicle[] || [];
       });
   }
   
   public onFilterChange() {
-    let vehicles = this._allVehicles;
-    
-    if (!!this.vehicleFilter.makeId)
-      vehicles = vehicles.filter(v => v.make.id == this.vehicleFilter.makeId);
-    
-    if (!!this.vehicleFilter.modelId)
-      vehicles = vehicles.filter(value => value.model.id == this.vehicleFilter.modelId);
-    
-    this._vehicles = vehicles;
+    this._fetchVehicles();
+  }
+  
+  private _fetchVehicles() {
+    this._vehiclesService.getVehicles(this.vehicleFilter).subscribe(vehicles => this._vehicles = vehicles);
   }
   
   public onReset() {
