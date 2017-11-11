@@ -12,6 +12,7 @@ import {VehicleFormComponent} from "./components/vehicle-form/vehicle-form.compo
 import {VehiclesService} from "./services/vehicles.service";
 import {AppErrorHandler} from "./app.error-handler";
 import {VehicleListComponent} from "./components/vehicle-list/vehicle-list.component";
+import {PaginationComponent} from "./components/shared/pagination.component";
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import {VehicleListComponent} from "./components/vehicle-list/vehicle-list.compo
     NavMenuComponent,
     HomeComponent,
     VehicleFormComponent,
-    VehicleListComponent
+    VehicleListComponent,
+    PaginationComponent
   ],
   imports: [
     CommonModule,

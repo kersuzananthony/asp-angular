@@ -10,6 +10,8 @@ export interface VehicleQuery {
   modelId?: number;
   sortBy?: string;
   isSortAscending?: boolean;
+  page?: number;
+  pageSize: number;
 }
 
 @Component({
@@ -27,7 +29,7 @@ export class VehicleListComponent implements OnInit {
     { title: "Contact Name", key: "contactName", isSortable: true }
   ];
   
-  public vehicleQuery: VehicleQuery = {};
+  public vehicleQuery: VehicleQuery = { pageSize: 10 };
   
   constructor(private _vehiclesService: VehiclesService) {}
   
@@ -76,7 +78,12 @@ export class VehicleListComponent implements OnInit {
   }
   
   public onReset() {
-    this.vehicleQuery = {};
+    this.vehicleQuery = { pageSize: 10 };
     this.onFilterChange();
+  }
+  
+  public onPageChanged(page: number) {
+    this.vehicleQuery.page = page;
+    this._fetchVehicles();
   }
 }
