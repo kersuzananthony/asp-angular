@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Angular1.Core;
 using Angular1.Core.Models;
+using Angular1.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Angular1.Database.Repositories
@@ -16,7 +19,7 @@ namespace Angular1.Database.Repositories
             _context = context;
         }
 
-        public async Task<List<Vehicle>> GetVehiclesAsync(VehicleFilter filter)
+        public async Task<List<Vehicle>> GetVehiclesAsync(VehicleQuery queryObject)
         {
             var query = _context.Vehicles
                 .Include(v => v.Features)
@@ -25,15 +28,24 @@ namespace Angular1.Database.Repositories
                 .ThenInclude(m => m.Make)
                 .AsQueryable();
 
-            if (filter.MakeId.HasValue)
+            if (queryObject.MakeId.HasValue)
             {
-                query = query.Where(v => v.Model.MakeId == filter.MakeId.Value);
+                query = query.Where(v => v.Model.MakeId == queryObject.MakeId.Value);
             }
 
-            if (filter.ModelId.HasValue)
+            if (queryObject.ModelId.HasValue)
             {
-                query = query.Where(v => v.ModelId == filter.ModelId.Value);
+                query = query.Where(v => v.ModelId == queryObject.ModelId.Value);
             }
+            
+            var columnsMap = new Dictionary<string, Expression<Func<Vehicle, object>>>()
+            {
+                ["make"] = vehicle => vehicle.Model.Make.Name,
+                ["mode"] = vehicle => vehicle.Model.Name,
+                ["contactName"] = vehicle => vehicle.ContactName
+            };
+
+            query = query.ApplyOrdering(queryObject, columnsMap);
 
             return await query.ToListAsync();
         }

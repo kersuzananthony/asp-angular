@@ -41,7 +41,7 @@ namespace Angular1.Mapping
 
         private void ResourceToDomainMapping()
         {
-            CreateMap<VehicleFilterResource, VehicleFilter>();
+            CreateMap<VehicleQueryResource, VehicleQuery>();
             
             CreateMap<SaveVehicleResource, Vehicle>()
                 .ForMember(v => v.Id, opt => opt.Ignore())
