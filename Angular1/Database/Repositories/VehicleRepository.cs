@@ -46,6 +46,7 @@ namespace Angular1.Database.Repositories
             };
 
             query = query.ApplyOrdering(queryObject, columnsMap);
+            query = query.ApplyPaging(queryObject);
 
             return await query.ToListAsync();
         }
