@@ -29,9 +29,10 @@ namespace Angular1.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetVehicles()
+        public async Task<IActionResult> GetVehicles(VehicleFilterResource filterResource)
         {
-            var vehicles = await _vehicleRepository.GetVehiclesAsync();
+            var filter = _mapper.Map<VehicleFilterResource, VehicleFilter>(filterResource);
+            var vehicles = await _vehicleRepository.GetVehiclesAsync(filter);
 
             return Ok(_mapper.Map<List<Vehicle>, List<VehicleResource>>(vehicles));
         }

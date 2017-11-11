@@ -6,7 +6,7 @@ namespace Angular1.Core
 {
     public interface IVehicleRepository
     {
-        Task<List<Vehicle>> GetVehiclesAsync();
+        Task<List<Vehicle>> GetVehiclesAsync(VehicleFilter filter);
         
         Task<Vehicle> GetVehicleAsync(int id, bool includeRelated = true);
 

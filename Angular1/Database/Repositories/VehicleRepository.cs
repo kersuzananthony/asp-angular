@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Angular1.Core;
 using Angular1.Core.Models;
@@ -15,14 +16,21 @@ namespace Angular1.Database.Repositories
             _context = context;
         }
 
-        public async Task<List<Vehicle>> GetVehiclesAsync()
+        public async Task<List<Vehicle>> GetVehiclesAsync(VehicleFilter filter)
         {
-            return await _context.Vehicles
+            var query = _context.Vehicles
                 .Include(v => v.Features)
                 .ThenInclude(vf => vf.Feature)
                 .Include(v => v.Model)
                 .ThenInclude(m => m.Make)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (filter.MakeId.HasValue)
+            {
+                query = query.Where(v => v.Model.MakeId == filter.MakeId.Value);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<Vehicle> GetVehicleAsync(int id, bool includeRelated = true)
