@@ -9,7 +9,7 @@
 <div class="well">
     <div class="form-group">
         <label for="make">Make</label>
-        <select name="make" id="make" class="form-control" [(ngModel)]="vehicleFilter.makeId" (change)="onFilterChange()">
+        <select name="make" id="make" class="form-control" [(ngModel)]="vehicleQuery.makeId" (change)="onFilterChange()">
             <option value=""></option>
             <option *ngFor="let make of makes" [attr.value]="make.id">{{ make.name }}</option>
         </select>
@@ -21,10 +21,13 @@
 <table class="table" *ngIf="!!vehicles && vehicles.length > 0; else noVehicles">
     <thead>
     <tr>
-        <th scope="col">Id</th>
-        <th scope="col">Make</th>
-        <th scope="col">Model</th>
-        <th scope="col">Contact Name</th>
+        <th *ngFor="let column of columns" scope="col" (click)="column.isSortable ? sortBy(column.key) : $event.preventDefault()">
+            {{ column.title }}
+            <i *ngIf="column.isSortable && vehicleQuery.sortBy === column.key"
+               class="fa"
+               [class.fa-sort-asc]="vehicleQuery.isSortAscending"
+               [class.fa-sort-desc]="!vehicleQuery.isSortAscending"></i>
+        </th>
         <th></th>
     </tr>
     </thead>

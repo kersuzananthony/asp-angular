@@ -5,9 +5,11 @@ import {Make} from "../../models/make.model";
 import {Observable} from "rxjs/Observable";
 import "rxjs/add/observable/forkJoin";
 
-export interface VehicleFilter {
+export interface VehicleQuery {
   makeId?: number;
   modelId?: number;
+  sortBy?: string;
+  isSortAscending?: boolean;
 }
 
 @Component({
@@ -18,8 +20,14 @@ export class VehicleListComponent implements OnInit {
   
   private _vehicles: Vehicle[] = [];
   private _makes: Make[] = [];
+  private _columns: {title: string, key?: string, isSortable?: boolean}[] = [
+    { title: "Id" },
+    { title: "Make", key: "make", isSortable: true },
+    { title: "Model", key: "model", isSortable: true },
+    { title: "Contact Name", key: "contactName", isSortable: true }
+  ];
   
-  public vehicleFilter: VehicleFilter = {};
+  public vehicleQuery: VehicleQuery = {};
   
   constructor(private _vehiclesService: VehiclesService) {}
   
@@ -29,6 +37,10 @@ export class VehicleListComponent implements OnInit {
   
   get makes(): Make[] {
     return this._makes;
+  }
+  
+  get columns(): { title: string, key?: string, isSortable?: boolean}[] {
+    return this._columns;
   }
   
   ngOnInit() {
@@ -48,12 +60,23 @@ export class VehicleListComponent implements OnInit {
     this._fetchVehicles();
   }
   
+  public sortBy(columnName: string) {
+    if (this.vehicleQuery.sortBy === columnName) {
+      this.vehicleQuery.isSortAscending = !this.vehicleQuery.isSortAscending;
+    } else {
+      this.vehicleQuery.sortBy = columnName;
+      this.vehicleQuery.isSortAscending = true;
+    }
+    
+    this._fetchVehicles();
+  }
+  
   private _fetchVehicles() {
-    this._vehiclesService.getVehicles(this.vehicleFilter).subscribe(vehicles => this._vehicles = vehicles);
+    this._vehiclesService.getVehicles(this.vehicleQuery).subscribe(vehicles => this._vehicles = vehicles);
   }
   
   public onReset() {
-    this.vehicleFilter = {};
+    this.vehicleQuery = {};
     this.onFilterChange();
   }
 }
