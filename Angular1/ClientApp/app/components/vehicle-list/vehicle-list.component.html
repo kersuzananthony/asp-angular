@@ -42,7 +42,7 @@
     </tbody>
 </table>
 
-<pagination *ngIf="!!vehicles && vehicles.length > 0" [totalItems]="10" [pageSize]="3" (pageChanged)="onPageChanged($event)"></pagination>
+<pagination *ngIf="!!vehicles && vehicles.length > 0" [totalItems]="totalItems" [pageSize]="perPage" (pageChanged)="onPageChanged($event)"></pagination>
 
 <ng-template #noVehicles style="margin-top: 50px;">
     No Vehicles added yet

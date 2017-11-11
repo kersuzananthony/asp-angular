@@ -7,6 +7,7 @@ import "rxjs/add/operator/map";
 import "rxjs/add/observable/of";
 import {VehicleForm} from "../components/vehicle-form/vehicle-form.component";
 import {Vehicle} from "../models/vehicle";
+import {QueryResult} from "../models/query-result";
 
 @Injectable()
 export class VehiclesService {
@@ -27,7 +28,7 @@ export class VehiclesService {
       .map(result => result.json());
   }
   
-  public getVehicles(filter?: any): Observable<Vehicle[]> {
+  public getVehicles(filter?: any): Observable<QueryResult<Vehicle>> {
     const params = this._buildQueryParams(filter);
     const endPoint = !!params ? `${VehiclesService.VEHICLE_BASE_ENDPOINT}?${params}` : VehiclesService.VEHICLE_BASE_ENDPOINT; 
     return this._http.get(endPoint).map(res => res.json());

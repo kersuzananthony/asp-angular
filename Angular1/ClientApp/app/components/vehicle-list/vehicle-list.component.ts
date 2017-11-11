@@ -4,6 +4,7 @@ import {Vehicle} from "../../models/vehicle";
 import {Make} from "../../models/make.model";
 import {Observable} from "rxjs/Observable";
 import "rxjs/add/observable/forkJoin";
+import {QueryResult} from "../../models/query-result";
 
 export interface VehicleQuery {
   makeId?: number;
@@ -20,7 +21,9 @@ export interface VehicleQuery {
 })
 export class VehicleListComponent implements OnInit {
   
-  private _vehicles: Vehicle[] = [];
+  private static readonly PAGE_SIZE = 2;
+  
+  private _queryResults: QueryResult<Vehicle> = {};
   private _makes: Make[] = [];
   private _columns: {title: string, key?: string, isSortable?: boolean}[] = [
     { title: "Id" },
@@ -29,12 +32,20 @@ export class VehicleListComponent implements OnInit {
     { title: "Contact Name", key: "contactName", isSortable: true }
   ];
   
-  public vehicleQuery: VehicleQuery = { pageSize: 10 };
+  public vehicleQuery: VehicleQuery = { pageSize: VehicleListComponent.PAGE_SIZE };
   
   constructor(private _vehiclesService: VehiclesService) {}
   
   get vehicles(): Vehicle[] {
-    return this._vehicles;
+    return this._queryResults.results || [];
+  }
+  
+  get totalItems(): number {
+    return this._queryResults.totalItems || 0;
+  }
+  
+  get perPage(): number {
+    return VehicleListComponent.PAGE_SIZE;
   }
   
   get makes(): Make[] {
@@ -54,11 +65,12 @@ export class VehicleListComponent implements OnInit {
     Observable.forkJoin(sources)
       .subscribe(data => {
         this._makes = data[0] as Make[] || [];
-        this._vehicles = data[1] as Vehicle[] || [];
+        this._queryResults = data[1] as QueryResult<Vehicle> || {};
       });
   }
   
   public onFilterChange() {
+    this.vehicleQuery.page = 1;
     this._fetchVehicles();
   }
   
@@ -74,12 +86,12 @@ export class VehicleListComponent implements OnInit {
   }
   
   private _fetchVehicles() {
-    this._vehiclesService.getVehicles(this.vehicleQuery).subscribe(vehicles => this._vehicles = vehicles);
+    this._vehiclesService.getVehicles(this.vehicleQuery).subscribe(results => this._queryResults = results);
   }
   
   public onReset() {
-    this.vehicleQuery = { pageSize: 10 };
-    this.onFilterChange();
+    this.vehicleQuery = { pageSize: VehicleListComponent.PAGE_SIZE, page: 1 };
+    this._fetchVehicles();
   }
   
   public onPageChanged(page: number) {

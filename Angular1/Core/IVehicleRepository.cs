@@ -6,7 +6,7 @@ namespace Angular1.Core
 {
     public interface IVehicleRepository
     {
-        Task<List<Vehicle>> GetVehiclesAsync(VehicleQuery queryObject);
+        Task<QueryResult<Vehicle>> GetVehiclesAsync(VehicleQuery queryObject);
         
         Task<Vehicle> GetVehicleAsync(int id, bool includeRelated = true);
 

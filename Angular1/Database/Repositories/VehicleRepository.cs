@@ -19,7 +19,7 @@ namespace Angular1.Database.Repositories
             _context = context;
         }
 
-        public async Task<List<Vehicle>> GetVehiclesAsync(VehicleQuery queryObject)
+        public async Task<QueryResult<Vehicle>> GetVehiclesAsync(VehicleQuery queryObject)
         {
             var query = _context.Vehicles
                 .Include(v => v.Features)
@@ -46,9 +46,14 @@ namespace Angular1.Database.Repositories
             };
 
             query = query.ApplyOrdering(queryObject, columnsMap);
+
+            var result = new QueryResult<Vehicle> { TotalItems = await query.CountAsync() };
+
             query = query.ApplyPaging(queryObject);
 
-            return await query.ToListAsync();
+            result.Results = await query.ToListAsync();
+
+            return result;
         }
 
         public async Task<Vehicle> GetVehicleAsync(int id, bool includeRelated = true)

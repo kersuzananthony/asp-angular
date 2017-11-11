@@ -15,6 +15,8 @@ namespace Angular1.Mapping
 
         private void DomainToResourceMapping()
         {
+            CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
+            
             CreateMap<Make, MakeResource>();
 
             CreateMap<Make, KeyValuePairResource>();

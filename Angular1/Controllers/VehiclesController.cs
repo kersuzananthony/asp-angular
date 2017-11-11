@@ -32,9 +32,9 @@ namespace Angular1.Controllers
         public async Task<IActionResult> GetVehicles(VehicleQueryResource queryResource)
         {
             var queryObject = _mapper.Map<VehicleQueryResource, VehicleQuery>(queryResource);
-            var vehicles = await _vehicleRepository.GetVehiclesAsync(queryObject);
+            var queryResult = await _vehicleRepository.GetVehiclesAsync(queryObject);
 
-            return Ok(_mapper.Map<List<Vehicle>, List<VehicleResource>>(vehicles));
+            return Ok(_mapper.Map<QueryResult<Vehicle>, QueryResultResource<VehicleResource>>(queryResult));
         }
 
         [HttpGet("{id}")]
