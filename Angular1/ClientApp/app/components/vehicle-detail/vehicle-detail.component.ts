@@ -1,13 +1,16 @@
 import {ToastyService} from 'ng2-toasty';
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {VehiclesService} from "../../services/vehicles.service";
 import {Vehicle} from "../../models/vehicle";
+import {PhotosService} from "../../services/photos.service";
 
 @Component({
   templateUrl: './vehicle-detail.component.html'
 })
 export class VehicleDetailComponent implements OnInit {
+  
+  @ViewChild("inputFile") inputFile: ElementRef;
   
   private _vehicle: Vehicle | null;
   private _vehicleId: number;
@@ -15,6 +18,7 @@ export class VehicleDetailComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private _toastyService: ToastyService,
+              private _photosService: PhotosService,
               private _vehicleService: VehiclesService) {
 
     route.params.subscribe(p => {
@@ -40,6 +44,21 @@ export class VehicleDetailComponent implements OnInit {
             return;
           }
         });
+  }
+  
+  public uploadPhoto() {
+    const nativeElement: HTMLInputElement = this.inputFile.nativeElement;
+    
+    if (!!nativeElement.files && nativeElement.files.length > 0)
+      this._photosService.uploadFile(nativeElement.files[0], this._vehicleId).subscribe(result => {
+        this._toastyService.success({
+          title: "Success",
+          msg: "The photo has been successfully uploaded.",
+          showClose: true,
+          timeout: 5000,
+          theme: "bootstrap"
+        });
+      });
   }
 
   public deleteVehicle() {

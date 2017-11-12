@@ -11,7 +11,7 @@ namespace Angular1.Core.Models
 
         public bool IsAccepted(string fileName)
         {
-            return AcceptedFileTypes.Any(f => f == fileName.ToLower());
+            return AcceptedFileTypes.Any(f => f == Path.GetExtension(fileName.ToLower()));
         }
     }
 }

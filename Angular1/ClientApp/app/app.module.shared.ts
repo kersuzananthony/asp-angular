@@ -14,6 +14,7 @@ import {AppErrorHandler} from "./app.error-handler";
 import {VehicleListComponent} from "./components/vehicle-list/vehicle-list.component";
 import {PaginationComponent} from "./components/shared/pagination.component";
 import {VehicleDetailComponent} from "./components/vehicle-detail/vehicle-detail.component";
+import {PhotosService} from "./services/photos.service";
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import {VehicleDetailComponent} from "./components/vehicle-detail/vehicle-detail
   ],
   providers: [
     VehiclesService,
+    PhotosService,
     {
       provide: ErrorHandler,
       useClass: AppErrorHandler
