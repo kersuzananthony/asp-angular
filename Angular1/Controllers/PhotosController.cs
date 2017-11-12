@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Angular1.Controllers.Resources;
@@ -17,17 +18,27 @@ namespace Angular1.Controllers
     {
         private readonly IHostingEnvironment _environment;
         private readonly IVehicleRepository _vehicleRepository;
+        private readonly IPhotoRepository _photoRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly PhotoSettings _photoSettings;
 
-        public PhotosController(IHostingEnvironment environment, IVehicleRepository vehicleRepository, IUnitOfWork unitOfWork, IMapper mapper, IOptionsSnapshot<PhotoSettings> options)
+        public PhotosController(IHostingEnvironment environment, IVehicleRepository vehicleRepository, IPhotoRepository photoRepository, IUnitOfWork unitOfWork, IMapper mapper, IOptionsSnapshot<PhotoSettings> options)
         {
             _environment = environment;
             _vehicleRepository = vehicleRepository;
+            _photoRepository = photoRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _photoSettings = options.Value;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPhotos(int vehicleId)
+        {
+            var photos = await _photoRepository.GetPhotos(vehicleId);
+
+            return Ok(_mapper.Map<IEnumerable<Photo>, IEnumerable<PhotoResource>>(photos));
         }
 
         [HttpPost]

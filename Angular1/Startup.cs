@@ -49,6 +49,7 @@ namespace Angular1
             services.AddScoped<IModelRepository, ModelRepository>();
             services.AddScoped<IFeatureRepository, FeatureRepository>();
             services.AddScoped<IMakeRepository, MakeRepository>();
+            services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddAutoMapper();

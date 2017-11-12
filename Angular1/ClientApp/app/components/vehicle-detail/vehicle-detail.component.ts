@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {VehiclesService} from "../../services/vehicles.service";
 import {Vehicle} from "../../models/vehicle";
 import {PhotosService} from "../../services/photos.service";
+import {Photo} from "../../models/photo.model";
 
 @Component({
   templateUrl: './vehicle-detail.component.html'
@@ -13,6 +14,7 @@ export class VehicleDetailComponent implements OnInit {
   @ViewChild("inputFile") inputFile: ElementRef;
   
   private _vehicle: Vehicle | null;
+  private _photos: Photo[] = [];
   private _vehicleId: number;
 
   constructor(private route: ActivatedRoute,
@@ -33,6 +35,10 @@ export class VehicleDetailComponent implements OnInit {
   get vehicle(): Vehicle | null {
     return this._vehicle;
   }
+  
+  get photos(): Photo[] {
+    return this._photos;
+  }
 
   ngOnInit() {
     this._vehicleService.getVehicle(this._vehicleId)
@@ -44,13 +50,18 @@ export class VehicleDetailComponent implements OnInit {
             return;
           }
         });
+    
+    this._photosService.getPhotos(this._vehicleId)
+      .subscribe(photos => this._photos = photos || []);
   }
   
   public uploadPhoto() {
     const nativeElement: HTMLInputElement = this.inputFile.nativeElement;
     
     if (!!nativeElement.files && nativeElement.files.length > 0)
-      this._photosService.uploadFile(nativeElement.files[0], this._vehicleId).subscribe(result => {
+      this._photosService.uploadFile(nativeElement.files[0], this._vehicleId).subscribe(photo => {
+        if (!!photo) this._photos.push(photo);
+        
         this._toastyService.success({
           title: "Success",
           msg: "The photo has been successfully uploaded.",

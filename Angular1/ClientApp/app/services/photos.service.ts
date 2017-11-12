@@ -15,4 +15,8 @@ export class PhotosService {
     return this._http.post(`/api/vehicles/${vehicleId}/photos`, formData)
       .map(res => res.json());
   }
+  
+  public getPhotos(vehicleId: number): Observable<Photo[]> {
+    return this._http.get(`/api/vehicles/${vehicleId}/photos`).map(res => res.json());
+  }
 }
