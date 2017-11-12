@@ -13,6 +13,7 @@ import {VehiclesService} from "./services/vehicles.service";
 import {AppErrorHandler} from "./app.error-handler";
 import {VehicleListComponent} from "./components/vehicle-list/vehicle-list.component";
 import {PaginationComponent} from "./components/shared/pagination.component";
+import {VehicleDetailComponent} from "./components/vehicle-detail/vehicle-detail.component";
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import {PaginationComponent} from "./components/shared/pagination.component";
     NavMenuComponent,
     HomeComponent,
     VehicleFormComponent,
+    VehicleDetailComponent,
     VehicleListComponent,
     PaginationComponent
   ],
@@ -33,7 +35,8 @@ import {PaginationComponent} from "./components/shared/pagination.component";
       {path: 'home', component: HomeComponent},
       {path: 'vehicles', component: VehicleListComponent},
       {path: "vehicles/new", component: VehicleFormComponent},
-      {path: "vehicles/:id", component: VehicleFormComponent},
+      {path: "vehicles/:id", component: VehicleDetailComponent},
+      {path: "vehicles/:id/edit", component: VehicleFormComponent},
       {path: '**', redirectTo: 'home'}
     ])
   ],

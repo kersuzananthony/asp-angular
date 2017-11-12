@@ -88,18 +88,12 @@ export class VehicleFormComponent implements OnInit {
   public submitForm() {
     if (this.vehicle.id !== undefined && !isNaN(this.vehicle.id)) {
       this._vehicleService.updateVehicle(this.vehicle)
-        .subscribe(() => {
-          this._toastyService.success({
-            title: "Success",
-            msg: "The vehicle has been successfully updated",
-            showClose: true,
-            timeout: 5000,
-            theme: "bootstrap"
-          });
-        });
+        .subscribe(() => this._redirectToDetail("The vehicle has been successfully updated", this.vehicle.id));
     } else {
       this._vehicleService.createVehicle(this.vehicle).subscribe(
-        result => console.log(result)
+        result => {
+          if (!!result) this._redirectToDetail("The vehicle has been successfully created", result.id);
+        }
       );
     }
   }
@@ -117,23 +111,16 @@ export class VehicleFormComponent implements OnInit {
     }
   }
   
-  public onDelete() {
-    if (!this.vehicle.id) return;
+  private _redirectToDetail(message: string, id: any) {
+    this._toastyService.success({
+      title: "Success",
+      msg: message,
+      showClose: true,
+      timeout: 5000,
+      theme: "bootstrap"
+    });
     
-    if (confirm("Are you sure?")) {
-      this._vehicleService.deleteVehicle(this.vehicle.id)
-        .subscribe(() => {
-          this._toastyService.success({
-            title: "Success",
-            msg: "You have successfully deleted the vehicle",
-            timeout: 5000,
-            showClose: true,
-            theme: "bootstrap"
-          });
-          
-          this._router.navigate(["/home"]);
-        });
-    }
+    this._router.navigate(['/vehicles', id]);
   }
   
   private populateModels() {
