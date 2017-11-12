@@ -1,26 +1,32 @@
 import {ToastyService} from 'ng2-toasty';
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {VehiclesService} from "../../services/vehicles.service";
 import {Vehicle} from "../../models/vehicle";
 import {PhotosService} from "../../services/photos.service";
 import {Photo} from "../../models/photo.model";
+import {ProgressService} from "../../services/progress.service";
+import {NetworkProgress} from "../../models/network-progress.model";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   templateUrl: './vehicle-detail.component.html'
 })
-export class VehicleDetailComponent implements OnInit {
+export class VehicleDetailComponent implements OnInit, OnDestroy {
   
   @ViewChild("inputFile") inputFile: ElementRef;
   
   private _vehicle: Vehicle | null;
   private _photos: Photo[] = [];
   private _vehicleId: number;
+  private _progress: NetworkProgress | null;
+  private _subscrition: Subscription | null;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
               private _toastyService: ToastyService,
               private _photosService: PhotosService,
+              private _progressService: ProgressService,
               private _vehicleService: VehiclesService) {
 
     route.params.subscribe(p => {
@@ -39,6 +45,10 @@ export class VehicleDetailComponent implements OnInit {
   get photos(): Photo[] {
     return this._photos;
   }
+  
+  get progress(): NetworkProgress | null {
+    return this._progress;
+  }
 
   ngOnInit() {
     this._vehicleService.getVehicle(this._vehicleId)
@@ -53,15 +63,24 @@ export class VehicleDetailComponent implements OnInit {
     
     this._photosService.getPhotos(this._vehicleId)
       .subscribe(photos => this._photos = photos || []);
+    
+    this._listenProgress();
+  }
+  
+  ngOnDestroy() {
+    if (!!this._subscrition) this._subscrition.unsubscribe();
   }
   
   public uploadPhoto() {
     const nativeElement: HTMLInputElement = this.inputFile.nativeElement;
     
-    if (!!nativeElement.files && nativeElement.files.length > 0)
-      this._photosService.uploadFile(nativeElement.files[0], this._vehicleId).subscribe(photo => {
+    if (!!nativeElement.files && nativeElement.files.length > 0) {
+      const file = nativeElement.files[0];
+      nativeElement.value = "";
+      
+      this._photosService.uploadFile(file, this._vehicleId).subscribe(photo => {
         if (!!photo) this._photos.push(photo);
-        
+
         this._toastyService.success({
           title: "Success",
           msg: "The photo has been successfully uploaded.",
@@ -69,7 +88,16 @@ export class VehicleDetailComponent implements OnInit {
           timeout: 5000,
           theme: "bootstrap"
         });
+      }, error => {
+        this._toastyService.error({
+          title: "Error",
+          msg: error.text(),
+          timeout: 5000,
+          showClose: true,
+          theme: "bootstrap"
+        });
       });
+    }
   }
 
   public deleteVehicle() {
@@ -89,5 +117,13 @@ export class VehicleDetailComponent implements OnInit {
           this.router.navigate(['/vehicles']);
         });
     }
+  }
+  
+  private _listenProgress() {
+    this._subscrition = this._progressService.uploadProgress().subscribe(
+      progress => this._progress = progress,
+      err => console.log(err),
+      () => console.log("Complete")
+    );
   }
 }
