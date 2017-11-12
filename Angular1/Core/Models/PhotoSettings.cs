@@ -1,0 +1,17 @@
+﻿using System.IO;
+using System.Linq;
+
+namespace Angular1.Core.Models
+{
+    public class PhotoSettings
+    {
+        public int MaxBytes { get; set; }
+        
+        public string[] AcceptedFileTypes { get; set; }
+
+        public bool IsAccepted(string fileName)
+        {
+            return AcceptedFileTypes.Any(f => f == fileName.ToLower());
+        }
+    }
+}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Angular1.Core;
+using Angular1.Core.Models;
 using Angular1.Database;
 using Angular1.Database.Repositories;
 using AutoMapper;
@@ -38,6 +39,7 @@ namespace Angular1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<PhotoSettings>(Configuration.GetSection("PhotoSettings"));
             services.AddMvc();
             services.AddDbContext<VegaDbContext>(options =>
             {

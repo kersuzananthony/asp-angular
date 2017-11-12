@@ -39,6 +39,8 @@ namespace Angular1.Mapping
                     opt => opt.MapFrom(v =>
                         v.Features.Select(vf => new KeyValuePairResource {Id = vf.Feature.Id, Name = vf.Feature.Name})))
                 .ForMember(vr => vr.Make, opt => opt.MapFrom(v => v.Model.Make));
+
+            CreateMap<Photo, PhotoResource>();
         }
 
         private void ResourceToDomainMapping()
