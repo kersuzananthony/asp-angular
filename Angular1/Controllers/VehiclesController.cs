@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Angular1.Controllers.Resources;
 using Angular1.Core;
 using Angular1.Core.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Angular1.Controllers
@@ -27,7 +29,7 @@ namespace Angular1.Controllers
             _modelRepository = modelRepository;
             _unitOfWork = unitOfWork;
         }
-
+        
         [HttpGet]
         public async Task<IActionResult> GetVehicles(VehicleQueryResource queryResource)
         {
@@ -48,6 +50,7 @@ namespace Angular1.Controllers
             return Ok(_mapper.Map<Vehicle, VehicleResource>(vehicle));
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateVehicle([FromBody] SaveVehicleResource saveVehicleResource)
         {

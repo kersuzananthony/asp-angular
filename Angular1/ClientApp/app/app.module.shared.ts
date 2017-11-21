@@ -17,6 +17,9 @@ import {VehicleDetailComponent} from "./components/vehicle-detail/vehicle-detail
 import {PhotosService} from "./services/photos.service";
 import {ProgressService} from "./services/progress.service";
 import {ApplicationBrowserXhr} from "./services/application-browser-xhr.service";
+import {LoginComponent} from "./components/login/login.component";
+import {AuthenticationService} from "./services/authentication.service";
+import {StorageService} from "./services/storage.service";
 
 @NgModule({
   declarations: [
@@ -26,7 +29,8 @@ import {ApplicationBrowserXhr} from "./services/application-browser-xhr.service"
     VehicleFormComponent,
     VehicleDetailComponent,
     VehicleListComponent,
-    PaginationComponent
+    PaginationComponent,
+    LoginComponent
   ],
   imports: [
     CommonModule,
@@ -40,6 +44,7 @@ import {ApplicationBrowserXhr} from "./services/application-browser-xhr.service"
       {path: "vehicles/new", component: VehicleFormComponent},
       {path: "vehicles/:id", component: VehicleDetailComponent},
       {path: "vehicles/:id/edit", component: VehicleFormComponent},
+      {path: "login", component: LoginComponent},
       {path: '**', redirectTo: 'home'}
     ])
   ],
@@ -47,6 +52,8 @@ import {ApplicationBrowserXhr} from "./services/application-browser-xhr.service"
     VehiclesService,
     PhotosService,
     ProgressService,
+    AuthenticationService,
+    StorageService,
     {
       provide: ErrorHandler,
       useClass: AppErrorHandler
