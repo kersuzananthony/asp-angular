@@ -1,9 +1,11 @@
 ﻿using Angular1.Core.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Angular1.Database
 {
-    public class VegaDbContext : DbContext
+    public class VegaDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Make> Makes { get; set; }
         
